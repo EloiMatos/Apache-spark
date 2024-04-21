@@ -1,13 +1,10 @@
 import os
 import time
-
+import csv
 import numpy
 import pandas as pd
-import pyodbc
 
-
-def upload(files, date, dbcon):
-
+def upload(files, date):
     path_nf = []
 
     for file in files:
@@ -16,17 +13,13 @@ def upload(files, date, dbcon):
 
         if not os.path.exists(file_path):
             path_nf.append(f'ARQUIVO NÃO ENCONTRADO {file_path}')
-
+            print(f'ARQUIVO NÃO ENCONTRADO {file_path}')
         else:
-
             state = file.split('_')
             state = state[5]
             dataframe = pd.read_excel(file_path)
             info = convert_data(dataframe)
-            send_info(info, state, date, dbcon)
-
-            print(f'COMPOSICOES SINTETICAS DE {state} de {date} CONCLUIDO')
-            time.sleep(3)
+            send_info(info, state, date)
 
     return path_nf
 
@@ -82,33 +75,26 @@ class composin:
         self.un = un
         self.preco = preco
 
+    def to_dict(self):
+        return {
+            "idsis": self.idsis,
+            "classe": self.classe,
+            "tipo": self.tipo,
+            "descri": self.descri,
+            "un": self.un,
+            "preco": self.preco
+        }
 
-def send_info(info, state, date, dbcon):
+def send_info(info, state, date):
+
+    print("info", info)
 
     date = int(date)
-    connect_it = pyodbc.connect(dbcon)
-    cursor = connect_it.cursor()
+    file_name = f'composin_{state}_{date}.csv'
+    file_header = ['idsis', 'classe', 'tipo', 'descri', 'un', 'preco']
 
-    ct = 0
-    print(F'UPLOADING COMPOSIN OF {state} IN {str(date)}')
-
-    to_insert = []
-    biggest = len(info)-1
-    sql_comand = 'INSERT INTO COMPOSIN (ORIGEM, SETOR, CLASSE, TIPO, DESCRI, UN, PRECO, MUNICIPIO, UF, ANOMES, PUBLICO, ID_EXTERNA)'
-    sql_comand = sql_comand + 'VALUES(?,?,?,?,?,?,?,?,?,?,?,?)'
-
-    for data in info:
-
-        if not numpy.isnan(data.idsis):
-            to_insert.append((5, 12, data.classe, data.tipo, data.descri,
-                             data.un, data.preco, None, state, date, 1, data.idsis))
-
-        if ct % 500 == 0 or ct == biggest:
-            print(F' {ct} OF {biggest} UPLOADED FOR COMPOSIN {state} {str(date)}')
-            cursor.executemany(sql_comand, to_insert)
-            connect_it.commit()
-            to_insert = []
-
-        ct += 1
-
-    print(F'ALL REGISTERS OF INSUMOS FROM {state} UPLOADED')
+    with open(file_name, 'w', newline='') as csv_file:
+        to_write_csv = csv.DictWriter(csv_file, fieldnames=file_header)
+        to_write_csv.writeheader()
+        for data in info:
+            to_write_csv.writerow(data.to_dict())

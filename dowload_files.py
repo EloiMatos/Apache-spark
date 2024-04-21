@@ -18,7 +18,7 @@ def generate_urls(date, states):
 
     year = date[:4]
     month = date[4:]
-    period = month+year
+    period = year+month
 
     def make_link(fu):
         return f'https://www.caixa.gov.br/Downloads/sinapi-a-partir-jul-2009-{fu.lower()}/SINAPI_ref_Insumos_Composicoes_{fu}_{period}_NaoDesonerado.zip'

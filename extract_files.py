@@ -39,13 +39,13 @@ def get_files(yearmonth, states):
 
     for state in states:
 
-        txt = f'SINAPI_Preco_Ref_Insumos_{state}_{yearmonth}_NaoDesonerado.XLS'
+        txt = f'SINAPI_Preco_Ref_Insumos_{state}_{yearmonth}_NaoDesonerado.XLSX'
         insumos.append(txt)
 
-        txt = f'SINAPI_Custo_Ref_Composicoes_Analitico_{state}_{yearmonth}_NaoDesonerado.xls'
+        txt = f'SINAPI_Custo_Ref_Composicoes_Analitico_{state}_{yearmonth}_NaoDesonerado.xlsx'
         compoan.append(txt)
 
-        txt = f'SINAPI_Custo_Ref_Composicoes_Sintetico_{state}_{yearmonth}_NaoDesonerado.xls'
+        txt = f'SINAPI_Custo_Ref_Composicoes_Sintetico_{state}_{yearmonth}_NaoDesonerado.xlsx'
         composin.append(txt)
 
     return [insumos, composin, compoan]
