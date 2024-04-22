@@ -43,3 +43,10 @@ jupyter lab
 5. Testando a Configuração
 
 Dentro do Jupyter, você pode criar um notebook e escrever código para testar as configurações do Delta Lake e do Apache Iceberg, por exemplo, criando tabelas e executando queries.
+
+6. Extração dos Dados
+
+O processo de extração faz a requisição de dowload via a seguinte URL:
+https://www.caixa.gov.br/Downloads/sinapi-a-partir-jul-2009-{uf}/SINAPI_ref_Insumos_Composicoes_{uf}_{anomes}_NaoDesonerado.zip
+
+Os arquivos são baixados e extraídos para uma pasta temporária chamada EXTRACTION, após isso os dados são lidos e salvos em um csv chamado composin_uf_anomes.csv
