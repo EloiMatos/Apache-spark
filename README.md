@@ -1,14 +1,15 @@
-# Apache-spark
+# Reproduzindo o ambiente 
 
-1. Instalação do pip (caso não esteja instalado):
+1. Subindo o container no docker com o jupyter 
 
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
+docker run -p 8888:8888 quay.io/jupyter/pyspark-notebook
 
-2. Instalação do PySpark e Jupyter Labs
+2. Fazendo uso do pyspark
 
-pip install pyspark
-pip install jupyterlab
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("trabalho-pesquisa-arquitetura-de-dados").config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.375").getOrCreate()
+df = spark.read.csv("/home/jovyan/data/movie_metadata.csv")
 
 3. Configuração do Delta Lake e Apache Iceberg
 
