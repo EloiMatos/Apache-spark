@@ -91,6 +91,8 @@ df = spark.read.csv("composin_RS_202311.csv")
 df.write.format("iceberg").save("/home/jovyan/composin_RS_202311")
 ```
 
+Para saber mais sobre Apache Iceberg: https://iceberg.apache.org/spark-quickstart/
+
 ---
 
 ## 4. Conclusão
