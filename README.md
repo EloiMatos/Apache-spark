@@ -3,7 +3,7 @@
 
 ## 1. Subindo o Container com Jupyter no Docker
 
-Para iniciar o ambiente de análise, execute o seguinte comando para iniciar um container Docker com o Jupyter:
+Para iniciar o ambiente de análise, execute o seguinte comando para iniciar um container Docker com o Jupyter e pyspark:
 
 ```bash
 docker run -p 8888:8888 quay.io/jupyter/pyspark-notebook
