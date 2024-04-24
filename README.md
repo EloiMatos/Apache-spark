@@ -99,4 +99,3 @@ Após seguir os passos acima, você estará pronto para iniciar a análise do da
 
 ---
 
-Sinta-se à vontade para adaptar o conteúdo conforme necessário e adicionar mais informações relevantes ao seu README.
