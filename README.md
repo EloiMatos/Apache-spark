@@ -65,7 +65,7 @@ df = spark.read.csv("composin_RS_202311.csv")
 # Salvar como tabela Delta
 df.write.format("delta").save("/home/jovyan/composin_RS_202311")
 ```
-Para saber mais sobre o Data Lake: https://delta.io/learn/getting-started/
+Para saber mais sobre o Delta Lake: https://delta.io/learn/getting-started/
 
 ### 3.2 Apache Iceberg com PySpark
 
