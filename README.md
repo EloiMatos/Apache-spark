@@ -1,52 +1,80 @@
-# Reproduzindo o ambiente 
+Aqui está uma versão mais organizada e formatada do conteúdo para o seu README no GitHub:
 
-1. Subindo o container no docker com o jupyter 
+---
 
+# Reproduzindo o Ambiente
+
+## 1. Subindo o Container com Jupyter no Docker
+
+Para iniciar o ambiente de análise, execute o seguinte comando para iniciar um container Docker com o Jupyter:
+
+```bash
 docker run -p 8888:8888 quay.io/jupyter/pyspark-notebook
+```
 
-######################################################
-2. Faça a extração do dataset 
+Acesse o Jupyter Notebook pelo navegador utilizando o endereço `http://localhost:8888`.
 
-Rode o arquivo extraction.ipynb para importar o dataset que será análisado
+---
 
+## 2. Extração do Dataset
 
-######################################################
-3.1 Fazendo uso do Delta Lake com pyspark para dataset 
+Antes de começar a análise, é necessário realizar a extração do dataset. Execute o notebook `extraction.ipynb` para importar o dataset que será utilizado na análise.
 
-Para usar o Delta Lake com o PySpark, você precisa adicionar as bibliotecas do Delta ao Spark. Você pode fazer isso configurando o SparkSession para incluir as dependências necessárias do Iceberg. Aqui está um exemplo de como fazer isso:
+---
 
-- listar os containers
+## 3. Utilizando o Delta Lake e Apache Iceberg com PySpark para Dataset
 
-docker ps 
+### 3.1 Delta Lake com PySpark
 
-- acessando a imagem com o jupyter
+Para utilizar o Delta Lake com PySpark, siga os passos abaixo:
 
-docker exec -it [id] /bin/bash
+#### Listar os Containers Docker em Execução
 
-- instala o delta-spark
+```bash
+docker ps
+```
 
-pip install delta_spark
+#### Acessar a Imagem com o Jupyter
 
-- usando o pyspark para Delta Lake
+```bash
+docker exec -it [id_do_container] /bin/bash
+```
 
+#### Instalar o Pacote `delta-spark`
+
+```bash
+pip install delta-spark
+```
+
+#### Exemplo de Uso do PySpark com Delta Lake
+
+```python
 import pyspark
 from delta import *
 
+# Configuração do SparkSession com Delta Lake
 builder = pyspark.sql.SparkSession.builder.appName("MyApp") \
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
     .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
 
+# Criando a sessão do Spark
 spark = configure_spark_with_delta_pip(builder).getOrCreate()
-df = spark.read.csv("composin_RS_202311.csv") 
+
+# Leitura do arquivo CSV
+df = spark.read.csv("composin_RS_202311.csv")
+
+# Salvar como tabela Delta
 df.write.format("delta").save("/home/jovyan/composin_RS_202311")
+```
 
-######################################################
-3.2 Fazendo uso do Apache Iceberg com pyspark para dataset 
+### 3.2 Apache Iceberg com PySpark
 
-Para usar o Apache Iceberg com o PySpark, você precisa adicionar as bibliotecas do Iceberg ao Spark. Você pode fazer isso configurando o SparkSession para incluir as dependências necessárias do Iceberg. Aqui está um exemplo de como fazer isso:
+Para utilizar o Apache Iceberg com PySpark, siga os passos abaixo:
 
+```python
 from pyspark.sql import SparkSession
 
+# Configuração do SparkSession com Iceberg
 spark = SparkSession.builder \
     .appName("IcebergExample") \
     .config("spark.jars.packages", "org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.0") \
@@ -56,9 +84,19 @@ spark = SparkSession.builder \
     .enableHiveSupport() \
     .getOrCreate()
 
-spark = configure_spark_with_delta_pip(builder).getOrCreate()
-df = spark.read.csv("composin_RS_202311.csv") 
-df.write.format("iceberg").save("/home/jovyan/composin_RS_202311")
+# Leitura do arquivo CSV
+df = spark.read.csv("composin_RS_202311.csv")
 
-######################################################
-4. 
+# Salvar como tabela Iceberg
+df.write.format("iceberg").save("/home/jovyan/composin_RS_202311")
+```
+
+---
+
+## 4. Conclusão
+
+Após seguir os passos acima, você estará pronto para iniciar a análise do dataset utilizando PySpark com Delta Lake ou Apache Iceberg.
+
+---
+
+Sinta-se à vontade para adaptar o conteúdo conforme necessário e adicionar mais informações relevantes ao seu README.
