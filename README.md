@@ -1,5 +1,4 @@
 Aqui está uma versão mais organizada e formatada do conteúdo para o seu README no GitHub:
-
 ---
 
 # Reproduzindo o Ambiente
