@@ -4,36 +4,32 @@
 
 docker run -p 8888:8888 quay.io/jupyter/pyspark-notebook
 
-2. Fazendo uso do pyspark
+2. Faça a extração do dataset 
+
+Rode o arquivo extraction.ipynb para importar o dataset que será análisado
+
+3. Fazendo uso do pyspark
 
 from pyspark.sql import SparkSession
 
-spark = SparkSession.builder.appName("trabalho-pesquisa-arquitetura-de-dados").config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.375").getOrCreate()
-df = spark.read.csv("/home/jovyan/data/movie_metadata.csv")
+spark = SparkSession.builder.appName("trabalho-engenharia-de-dados").config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.375").getOrCreate()
+df = spark.read.csv("composin_PR_202311.csv")
 
-3. Configuração do Delta Lake e Apache Iceberg
+4. Adicionar as Dependências do Apache Iceberg
 
-# Instalação do Delta Lake
-
-pip install delta-spark
-
-Para configurar o PySpark para usar o Delta Lake, você precisará ajustar a configuração do Spark Session:
+Para usar o Apache Iceberg com o PySpark, você precisa adicionar as bibliotecas do Iceberg ao Spark. Você pode fazer isso configurando o SparkSession para incluir as dependências necessárias do Iceberg. Aqui está um exemplo de como fazer isso:
 
 from pyspark.sql import SparkSession
 
-builder = SparkSession.builder.appName("DeltaLakeExample")
-builder.config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-builder.config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+spark = SparkSession.builder \
+    .appName("IcebergIntegration") \
+    .config("spark.jars.packages", "org.apache.iceberg:iceberg-spark-runtime-3.2_2.12:0.14.0") \
+    .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions") \
+    .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkSessionCatalog") \
+    .config("spark.sql.catalog.spark_catalog.type", "hive") \
+    .enableHiveSupport() \
+    .getOrCreate()
 
-spark = builder.getOrCreate()
-
-# Configuração do Apache Iceberg
-
-builder.config("spark.jars.packages", "org.apache.iceberg:iceberg-spark-runtime-3.2_2.12:0.12.0")
-builder.config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
-builder.config("spark.sql.catalog.local", "org.apache.iceberg.spark.SparkCatalog")
-builder.config("spark.sql.catalog.local.type", "hadoop")
-builder.config("spark.sql.catalog.local.warehouse", "/path/to/warehouse")
 
 4. Execução do Jupyter Labs
 
