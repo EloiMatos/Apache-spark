@@ -15,6 +15,8 @@ Acesse o Jupyter Notebook pelo navegador utilizando o endereço `http://localhos
 
 ## 2. Extração do Dataset
 
+Arraste os arquivos do repositório em questão para dentro do ambiente Jupyter.
+
 Antes de começar a análise, é necessário realizar a extração do dataset. Execute o notebook `extraction.ipynb` para importar o dataset que será utilizado na análise.
 
 ---
