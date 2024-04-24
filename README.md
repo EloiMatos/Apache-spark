@@ -101,3 +101,11 @@ Após seguir os passos acima, você estará pronto para iniciar a análise do da
 
 ---
 
+Falta: 
+
+• Descreva o cenário da(s) tabela(s) em um arquivo tipo notebook – modelo ER, imagens e 
+códigos DDL - e da fonte de dados utilizada (preferência dados públicos).
+• Explique e evidencie, com exemplos, os comandos de INSERT, UPDATE e DELETE nas tabelas 
+Delta e Iceberg dentro do Apache Spark.
+• Dentro do README, separe todos os cenários / exemplos do Delta Lake e Apache Iceberg.
+
