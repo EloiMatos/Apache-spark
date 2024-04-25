@@ -9,8 +9,7 @@ Para iniciar o ambiente de análise, execute o seguinte comando para iniciar um 
 docker run -p 8888:8888 quay.io/jupyter/pyspark-notebook
 ```
 
-Acesse o Jupyter Notebook pelo navegador utilizando o endereço `http://localhost:8888`.
-Dessa forma você tera o pyspark junto ao ambiente do Jupyter.
+Dessa forma você tera o pyspark junto ao ambiente do Jupyter. Acesse o Jupyter Notebook pelo navegador utilizando o endereço `http://localhost:8888`.
 
 ---
 
