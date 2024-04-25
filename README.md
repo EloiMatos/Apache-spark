@@ -103,6 +103,10 @@ Após seguir os passos acima, você estará pronto para iniciar a análise do da
 
 ## 5. Modelo ER e DDL para Tabelas Delta e Iceberg
 
+**ER (entity-relationship)**:
+
+Acesse o arquivo DB_DIAGRAM.drawio
+
 **DDL (Data Definition Language)**:
 ```sql
 CREATE TABLE composin (
