@@ -90,35 +90,7 @@ df = spark.read.csv("composin_RS_202311.csv")
 # Salvar como tabela Iceberg
 df.write.format("iceberg").save("/home/jovyan/composin_RS_202311")
 ```
-#Criar tabela Composin
-df = spark.read.csv("composin_RS_202311.csv")
-df.write.format("delta").save("/home/jovyan/composin")
 
-#Ler o tamanho do dataframe
-num_linhas1 = df.count()
-print(num_linhas1)
-
-#Fazer o insert em uma tabela existente
-df = spark.read.csv("composin_SC_202311.csv")
-df.write.format("delta").mode("append").save("/home/jovyan/composin")
-
-df = spark.read.csv("composin_PR_202311.csv")
-df.write.format("delta").mode("append").save("/home/jovyan/composin")
-
-
-#Ler os arquivos do dataframe
-df = spark.read.format("delta").load("/home/jovyan/composin")
-df.show()
-
-#Ler o tamanho do dataframe
-num_linhas2 = df.count()
-print(num_linhas2)
-
-#Carregar a tabela Delta como um DeltaTable
-delta_table = DeltaTable.forPath(spark, caminho_tabela_delta)
-
-#Excluir a tabela Delta
-delta_table.drop()
 Para saber mais sobre Apache Iceberg: https://iceberg.apache.org/spark-quickstart/
 
 ---
@@ -128,6 +100,70 @@ Para saber mais sobre Apache Iceberg: https://iceberg.apache.org/spark-quickstar
 Após seguir os passos acima, você estará pronto para iniciar a análise do dataset utilizando PySpark com Delta Lake ou Apache Iceberg.
 
 ---
+
+5. ### Modelo ER e DDL para Tabelas Delta e Iceberg
+
+**DDL (Data Definition Language)**:
+```sql
+CREATE TABLE composin (
+    id INT,
+    nome STRING,
+    valor FLOAT
+);
+```
+
+### Operações de INSERT, UPDATE e DELETE
+
+**Delta Lake**:
+
+- **INSERT**:
+  Após criar a tabela Delta inicial, você pode inserir novos dados de outros datasets.
+  ```python
+  # Inserir dados de outro CSV
+  df_novo = spark.read.csv("composin_SC_202311.csv")
+  df_novo.write.format("delta").mode("append").save("/home/jovyan/composin")
+  ```
+
+- **UPDATE**:
+  O Delta Lake suporta operações de update diretamente.
+  ```python
+  from delta.tables import *
+
+  delta_table = DeltaTable.forPath(spark, "/home/jovyan/composin")
+  delta_table.update(
+      condition="id = 10",
+      set={"valor": expr("valor + 100")}
+  )
+  ```
+
+- **DELETE**:
+  Deletar registros específicos.
+  ```python
+  delta_table.delete("id = 10")
+  ```
+
+**Apache Iceberg**:
+
+- **INSERT**:
+  Similar ao Delta Lake, adicionando dados com `append`.
+  ```python
+  df_novo = spark.read.csv("composin_SC_202311.csv")
+  df_novo.write.format("iceberg").mode("append").save("/home/jovyan/composin")
+  ```
+
+- **UPDATE**:
+  No Iceberg, operações de update são tratadas de maneira diferente e podem requerer sobreposição de dados ou reescrita.
+  ```python
+  df_atualizado = df.withColumn("valor", expr("valor + 100"))
+  df_atualizado.write.format("iceberg").mode("overwrite").save("/home/jovyan/composin")
+  ```
+
+- **DELETE**:
+  Iceberg também permite a exclusão direta, mas é mais comum usar filtros e sobreposições.
+  ```python
+  df_filtrado = df.filter("id != 10")
+  df_filtrado.write.format("iceberg").mode("overwrite").save("/home/jovyan/composin")
+  ```
 
 Falta: 
 
