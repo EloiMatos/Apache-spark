@@ -101,6 +101,70 @@ Após seguir os passos acima, você estará pronto para iniciar a análise do da
 
 ---
 
+## 5. Modelo ER e DDL para Tabelas Delta e Iceberg
+
+**DDL (Data Definition Language)**:
+```sql
+CREATE TABLE composin (
+    id INT,
+    nome STRING,
+    valor FLOAT
+);
+```
+
+### Operações de INSERT, UPDATE e DELETE
+
+**Delta Lake**:
+
+- **INSERT**:
+  Após criar a tabela Delta inicial, você pode inserir novos dados de outros datasets.
+  ```python
+  # Inserir dados de outro CSV
+  df_novo = spark.read.csv("composin_SC_202311.csv")
+  df_novo.write.format("delta").mode("append").save("/home/jovyan/composin")
+  ```
+
+- **UPDATE**:
+  O Delta Lake suporta operações de update diretamente.
+  ```python
+  from delta.tables import *
+
+  delta_table = DeltaTable.forPath(spark, "/home/jovyan/composin")
+  delta_table.update(
+      condition="id = 10",
+      set={"valor": expr("valor + 100")}
+  )
+  ```
+
+- **DELETE**:
+  Deletar registros específicos.
+  ```python
+  delta_table.delete("id = 10")
+  ```
+
+**Apache Iceberg**:
+
+- **INSERT**:
+  Similar ao Delta Lake, adicionando dados com `append`.
+  ```python
+  df_novo = spark.read.csv("composin_SC_202311.csv")
+  df_novo.write.format("iceberg").mode("append").save("/home/jovyan/composin")
+  ```
+
+- **UPDATE**:
+  No Iceberg, operações de update são tratadas de maneira diferente e podem requerer sobreposição de dados ou reescrita.
+  ```python
+  df_atualizado = df.withColumn("valor", expr("valor + 100"))
+  df_atualizado.write.format("iceberg").mode("overwrite").save("/home/jovyan/composin")
+  ```
+
+- **DELETE**:
+  Iceberg também permite a exclusão direta, mas é mais comum usar filtros e sobreposições.
+  ```python
+  df_filtrado = df.filter("id != 10")
+  df_filtrado.write.format("iceberg").mode("overwrite").save("/home/jovyan/composin")
+  ```
+
 Falta: 
 
 • Descreva o cenário da(s) tabela(s) em um arquivo tipo notebook – modelo ER, imagens e 
