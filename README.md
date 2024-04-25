@@ -90,7 +90,35 @@ df = spark.read.csv("composin_RS_202311.csv")
 # Salvar como tabela Iceberg
 df.write.format("iceberg").save("/home/jovyan/composin_RS_202311")
 ```
+#Criar tabela Composin
+df = spark.read.csv("composin_RS_202311.csv")
+df.write.format("delta").save("/home/jovyan/composin")
 
+#Ler o tamanho do dataframe
+num_linhas1 = df.count()
+print(num_linhas1)
+
+#Fazer o insert em uma tabela existente
+df = spark.read.csv("composin_SC_202311.csv")
+df.write.format("delta").mode("append").save("/home/jovyan/composin")
+
+df = spark.read.csv("composin_PR_202311.csv")
+df.write.format("delta").mode("append").save("/home/jovyan/composin")
+
+
+#Ler os arquivos do dataframe
+df = spark.read.format("delta").load("/home/jovyan/composin")
+df.show()
+
+#Ler o tamanho do dataframe
+num_linhas2 = df.count()
+print(num_linhas2)
+
+#Carregar a tabela Delta como um DeltaTable
+delta_table = DeltaTable.forPath(spark, caminho_tabela_delta)
+
+#Excluir a tabela Delta
+delta_table.drop()
 Para saber mais sobre Apache Iceberg: https://iceberg.apache.org/spark-quickstart/
 
 ---
